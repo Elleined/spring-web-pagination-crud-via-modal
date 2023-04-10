@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+   <meta charset="UTF-8">
+   <title>Dynamic Modal</title>
+
+   <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"
+           integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw="
+           crossorigin="anonymous"></script>  <!-- CDN Link for JQuery -->
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- CDN Link to activate the $.get -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<a class="btn btn-primary" id="eBtn" th:href="@{/dynamic-modal/{id}(id=${1})}">Show Modal</a> <!-- Get Person By id to be used to populate the modal-->
+
+<div class="myForm">
+   <form>
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                  <div class="mb-3">
+                     <label for="id" class="col-form-label">Person Id:</label>
+                     <input type="text" class="form-control" id="id" value="" name="id">
+                  </div>
+               </div>
+               <div class="modal-body">
+                  <div class="mb-3">
+                     <label for="name" class="col-form-label">Person Name:</label>
+                     <input type="text" class="form-control" id="name" value="" name="name">
+                  </div>
+               </div>
+               <div class="modal-body">
+                  <div class="mb-3">
+                     <label for="age" class="col-form-label">Person Age:</label>
+                     <input type="text" class="form-control" id="age" value="" name="age">
+                  </div>
+               </div>
+               <div class="modal-body">
+                  <div class="mb-3">
+                     <label for="gender" class="col-form-label">Person Gender:</label>
+                     <input type="text" class="form-control" id="gender" value="" name="gender">
+                  </div>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Send message</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </form>
+</div>
+
+<script>
+   $(document).ready(function() {
+    $('#eBtn').on('click', function(event) {
+        event.preventDefault(); // prevent to submit the request
+
+        var href = $(this).attr('href'); // event that trigger this action
+
+        $.get(href, function(personDTO, status) {
+            $('.myForm #id').val(personDTO.id); // Populate the form with response body
+            $('.myForm #name').val(personDTO.name); // Populate the form with response body
+            $('.myForm #age').val(personDTO.age); // Populate the form with response body
+            $('.myForm #gender').val(personDTO.gender); // Populate the form with response body
+        });
+
+        $('.myForm #exampleModal').modal('show'); // Dynamically show the modal
+    });
+});
+</script>
+</body>
+</html>
