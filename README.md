@@ -7,5 +7,5 @@
     - Administration | Data Import/Restore | tick the Import from self contain file then specify the full path to tbl_person.sql | Start Import
   - CLI 
      - mysql -u username -p database_name < locationOfDatabaseYouWantToImport/databaseYouWantToBackUp.sql
-       Example : mysql -u root -p new_database < C:\Users\person_db.sql
+       - Example : mysql -u root -p new_database < C:\Users\person_db.sql
      - if unknown db is thrown just create the database then rerun the above example
