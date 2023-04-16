@@ -49,7 +49,7 @@
                   </div>
                </div>
                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="readButton">Read</button>
+                  <button type="button" class="btn btn-secondary" id="readButton">Read</button>
                   <button type="button" class="btn btn-primary" id="saveButton">Save</button>
                </div>
             </div>
@@ -69,13 +69,16 @@
          $.ajax({
             type: "GET",
             url: href, // {id} can be read in controller in @PathVariable
-            success: function(response) {
+            success: function(personDTO, response) {
+               // Where the personDTO is the retrieved value from the controller
                alert('GET Request via Path Variable Success', response);
 
+               $('#id').val(personDTO.id); // Setting the value of input from retrieved data
+               $('#name').val(personDTO.name); // Setting the value of input from retrieved data
+               $('#age').val(personDTO.age); // Setting the value of input from retrieved data
+               $('#gender').val(personDTO.gender); // Setting the value of input from retrieved data
 
-
-
-               $('.myForm #exampleModal').modal('show'); // Dynamically show the modal
+               $('#exampleModal').modal('show'); // Dynamically show the modal
             },
             error: function(xhr, status, error) {
                alert('GET Request via Path Variable Error', error);
@@ -84,14 +87,14 @@
       });
 
       // Start of ajax request POST
-      $('.myForm #saveButton').on('click', function() {
-         var id = $('.myForm #id').val();
-         var name = $('.myForm #name').val();
-         var gender = $('.myForm #gender').val();
-         var age = $('.myForm #age').val();
+      $('#saveButton').on('click', function() {
+         var id = $('#id').val();
+         var name = $('#name').val();
+         var gender = $('#gender').val();
+         var age = $('#age').val();
          $.ajax({
             type: "POST",
-            url: "/save",
+            url: "/create",
             data: JSON.stringify({
                id: id,
                name: name,
@@ -109,18 +112,24 @@
       });
 
       // Start of ajax GET request with @RequestParam
-      $('.myForm #readButton').on('click', function() {
+      $('#readButton').on('click', function() {
          $.ajax({
             type: "GET",
             url: "/read",
             data: {
-               id: 45 // This can be read in controller with @RequestParam
+               id: 60 // This can be read in controller with @RequestParam
             },
-            success: function (response) {
-               alert('GET Request via Request Body Success', response);
+            success: function (personDTO, response) {
+               // Where the personDTO is the retrieved value from the controller
+               alert('GET Request via Request Param Success', response);
+
+               $('#id').val(personDTO.id); // Setting the value of input from retrieved data
+               $('#name').val(personDTO.name); // Setting the value of input from retrieved data
+               $('#age').val(personDTO.age); // Setting the value of input from retrieved data
+               $('#gender').val(personDTO.gender); // Setting the value of input from retrieved data
             },
             error: function (xhr, status, error) {
-               alert('GET Request via Request Body Error', error);
+               alert('GET Request via Request Param Error', error);
             }
          });
       });
