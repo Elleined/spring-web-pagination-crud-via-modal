@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<a class="btn btn-primary" id="eBtn" th:href="@{/dynamic-modal/{id}(id=${1})}">Show Modal</a> <!-- Get Person By id to be used to populate the modal-->
+<a class="btn btn-primary" id="eBtn" th:href="@{/dynamic-modal/{id} (id=${45}) }">Show Modal</a> <!-- Get Person By id to be used to populate the modal-->
 
 <div class="myForm">
    <form>
@@ -49,8 +49,8 @@
                   </div>
                </div>
                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Send message</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="readButton">Read</button>
+                  <button type="button" class="btn btn-primary" id="saveButton">Save</button>
                </div>
             </div>
          </div>
@@ -60,21 +60,71 @@
 
 <script>
    $(document).ready(function() {
-    $('#eBtn').on('click', function(event) {
-        event.preventDefault(); // prevent to submit the request
+       // Start of Get Request with @PathVariable
+       $('#eBtn').on('click', function(event) {
+         event.preventDefault(); // prevent to submit the request
 
-        var href = $(this).attr('href'); // event that trigger this action
+         var href = $(this).attr('href'); // event that trigger this action
 
-        $.get(href, function(personDTO, status) {
-            $('.myForm #id').val(personDTO.id); // Populate the form with response body
-            $('.myForm #name').val(personDTO.name); // Populate the form with response body
-            $('.myForm #age').val(personDTO.age); // Populate the form with response body
-            $('.myForm #gender').val(personDTO.gender); // Populate the form with response body
-        });
+         $.ajax({
+            type: "GET",
+            url: href, // {id} can be read in controller in @PathVariable
+            success: function(response) {
+               alert('GET Request via Path Variable Success', response);
 
-        $('.myForm #exampleModal').modal('show'); // Dynamically show the modal
-    });
-});
+
+
+
+               $('.myForm #exampleModal').modal('show'); // Dynamically show the modal
+            },
+            error: function(xhr, status, error) {
+               alert('GET Request via Path Variable Error', error);
+            }
+         });
+      });
+
+      // Start of ajax request POST
+      $('.myForm #saveButton').on('click', function() {
+         var id = $('.myForm #id').val();
+         var name = $('.myForm #name').val();
+         var gender = $('.myForm #gender').val();
+         var age = $('.myForm #age').val();
+         $.ajax({
+            type: "POST",
+            url: "/save",
+            data: JSON.stringify({
+               id: id,
+               name: name,
+               gender: gender,
+               age: age
+            }),
+            contentType: "application/json",
+            success: function(response) {
+               alert('Post Request Success:', response);
+            },
+            error: function(xhr, status, error) {
+               alert('Post Request Error', error);
+            }
+         });
+      });
+
+      // Start of ajax GET request with @RequestParam
+      $('.myForm #readButton').on('click', function() {
+         $.ajax({
+            type: "GET",
+            url: "/read",
+            data: {
+               id: 45 // This can be read in controller with @RequestParam
+            },
+            success: function (response) {
+               alert('GET Request via Request Body Success', response);
+            },
+            error: function (xhr, status, error) {
+               alert('GET Request via Request Body Error', error);
+            }
+         });
+      });
+   });
 </script>
 </body>
 </html>
